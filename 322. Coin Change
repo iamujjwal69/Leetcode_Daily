@@ -1,0 +1,29 @@
+class Solution:
+    def coinChange(self, coins, amount):
+        n = len(coins)
+        memo = {}
+
+        def solve(i, rem):
+            if rem == 0:
+                return 0
+            if i == n:
+                return float('inf')
+
+            if (i, rem) in memo:
+                return memo[(i, rem)]
+
+            # Not Pick
+            not_pick = solve(i + 1, rem)
+
+            # Pick
+            pick = float('inf')
+            if coins[i] <= rem:
+                res = solve(i, rem - coins[i])
+                if res != float('inf'):
+                    pick = 1 + res
+
+            memo[(i, rem)] = min(pick, not_pick)
+            return memo[(i, rem)]
+
+        ans = solve(0, amount)
+        return ans if ans != float('inf') else -1
